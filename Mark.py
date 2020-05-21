@@ -1,4 +1,5 @@
 # This is a comment
-print("Hello World, from Mark - and small computer")
+# pls helplllll
+print("Hello World, from Mark and Merritt - and small computer")
 print("Another test")
 print("Conflicting test")
