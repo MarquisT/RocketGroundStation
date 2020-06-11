@@ -6,10 +6,10 @@ pygame.init()
 class Rocket:
 
     def __init__(self):
-        self.is_ready = False
+        self._is_ready = False
 
     def is_ready(self):
-        return self.is_ready
+        return self._is_ready
 
 class Button():
     def __init__(self, color, x, y, width, height, text=''):
@@ -48,10 +48,12 @@ def redrawWindow():
     greenButton.draw(win)
 
 
+rocket = Rocket()
+
 win = pygame.display.set_mode((500, 500))
 
 pygame.display.set_caption('rocket base station')
-
+is_mouse_over_button = False
 x = 50
 y = 50
 width = 40
@@ -74,12 +76,21 @@ while is_running:
             pygame.quit()
             quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if greenButton.isOver(pos):
-                print('clicked the button')
+            if rocket.is_ready:
+                if greenButton.isOver(pos):
+                    print('clicked the button')
+
         if event.type == pygame.MOUSEMOTION:
             if greenButton.isOver(pos):
-                greenButton.color = (0, 100, 0)
-            else:
-                greenButton.color = (50, 255, 50)
+                is_mouse_over_button = True
 
+            else:
+                is_mouse_over_button = False
+    if rocket.is_ready():
+        if is_mouse_over_button:
+            greenButton.color = (0, 100, 0)
+        else:
+            greenButton.color = (50, 255, 50)
+    else:
+        greenButton.color = (30, 30, 30)
     clock.tick(60)
