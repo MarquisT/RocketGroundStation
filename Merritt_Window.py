@@ -3,7 +3,15 @@ import pygame
 pygame.init()
 
 
-class button():
+class Rocket:
+
+    def __init__(self):
+        self.is_ready = False
+
+    def is_ready(self):
+        return self.is_ready
+
+class Button():
     def __init__(self, color, x, y, width, height, text=''):
         self.color = color
         self.x = x
@@ -23,7 +31,8 @@ class button():
             font = pygame.font.SysFont('comicsans', 60)
             text = font.render(self.text, 1, (0, 0, 0))
             win.blit(text, (
-                int(self.x + (self.width / 2 - text.get_width() / 2)), int(self.y + (self.height / 2 - text.get_height() / 2))))
+                int(self.x + (self.width / 2 - text.get_width() / 2)),
+                int(self.y + (self.height / 2 - text.get_height() / 2))))
 
     def isOver(self, pos):
         # Pos is the mouse position or a tuple of (x,y) coordinates
@@ -50,7 +59,7 @@ height = 60
 vel = 5
 clock = pygame.time.Clock()
 
-greenButton = button((0, 255, 0), 150, 225, 250, 100, 'Text')
+greenButton = Button((0, 255, 0), 150, 225, 250, 100, 'Text')
 is_running = True
 
 while is_running:
