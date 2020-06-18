@@ -1,5 +1,18 @@
 import pygame
 from Rocket import Rocket
+import matplotlib
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt
+import matplotlib.backends.backend_agg as agg
+
+fig = plt.figure(figsize=[3, 3])
+ax = fig.add_subplot(111)
+canvas = agg.FigureCanvasAgg(fig)
+
+
+
+
 
 
 # Class Declarations
@@ -52,6 +65,11 @@ is_mouse_over_button = False
 launchButton = Button((0,255,0),50,600,250,50,'Launch!')
 timeButton =  Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
 
+
+data = [5, 6, 7, 3]
+
+
+
 # Our Draw function
 def redrawWindow():
     win.fill((255,255,255))
@@ -64,17 +82,29 @@ def redrawWindow():
 
 
 
+# Graph Function
+def plot(data):
+   ax.plot(data)
+   canvas.draw()
+   renderer = canvas.get_renderer()
+
+   raw_data = renderer.tostring_rgb()
+   size = canvas.get_width_height()
+
+   return pygame.image.fromstring(raw_data, size, "RGB")
+
+
 # Main Loop
 while is_running:
-    redrawWindow()
-    pygame.display.flip()
 
+    redrawWindow()
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
 
         if event.type == pygame.QUIT:
             is_running = False
             pygame.quit()
+            exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if ourRocket.is_ready():
@@ -88,6 +118,8 @@ while is_running:
 
             else:
                 is_mouse_over_button = False
+
+
     if ourRocket.is_ready():
         if is_mouse_over_button:
             launchButton.color = (0, 100, 0)
@@ -95,4 +127,14 @@ while is_running:
             launchButton.color = (50, 255, 50)
     else:
         launchButton.color = (30, 30, 30)
+
+
+    if ourRocket.is_launched():
+        tempChart = plot(data)
+        win.blit(tempChart, (50, 50))
+
+
+
+
+    pygame.display.flip()
     clock.tick(60)
