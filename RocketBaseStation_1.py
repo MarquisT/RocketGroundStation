@@ -13,6 +13,7 @@ class Button():
         self.height = height
         self.text = text
 
+
     def draw(self, win, outline=None):
         # Call this method to draw the button on the screen
         if outline:
@@ -49,11 +50,16 @@ is_mouse_over_button = False
 
 #
 launchButton = Button((0,255,0),50,600,250,50,'Launch!')
+timeButton =  Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
 
 # Our Draw function
 def redrawWindow():
     win.fill((255,255,255))
-    launchButton.draw(win)
+    if not ourRocket.is_launched():
+        launchButton.draw(win)
+    else:
+        timeButton.text = "AirTime: {:.2f}".format(ourRocket.getAirTime())
+        timeButton.draw(win)
 
 
 
@@ -74,6 +80,7 @@ while is_running:
             if ourRocket.is_ready():
                 if launchButton.isOver(pos):
                     print('clicked the button')
+                    ourRocket.launch()
 
         if event.type == pygame.MOUSEMOTION:
             if launchButton.isOver(pos):
