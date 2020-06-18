@@ -107,7 +107,7 @@ while is_running:
             exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if ourRocket.is_ready():
+            if ourRocket.is_ready() and not ourRocket.is_launched():
                 if launchButton.isOver(pos):
                     print('clicked the button')
                     ourRocket.launch()
