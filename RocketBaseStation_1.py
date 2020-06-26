@@ -133,6 +133,10 @@ while is_running:
         tempChart = plot(data)
         win.blit(tempChart, (50, 50))
 
+        if ourRocket.is_changed():
+            print(ourRocket.temps)
+
+
 
 
 
