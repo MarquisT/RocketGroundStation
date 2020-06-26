@@ -1,3 +1,12 @@
 
 When the launch button is clicked again it will ask you to confirm "Has the Rocket Landed Y/N?" then stop the data if it has.
 
+- please make the plot log the data from the rocket temperature list
+- read through the communicator and see if you can figure out why we are using that
+- what about making a panel above the launch button that shows current state
+    - for example eventually it will says
+    Temp - 18.5 C
+    Air Pressure - 1012 mb
+    Calculated Alt - 200 meters
+
+- Once these are done, we will move on the altitude and pressure graphs. 
