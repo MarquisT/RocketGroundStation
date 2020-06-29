@@ -1,15 +1,12 @@
 import pygame
 from Rocket import Rocket
 import matplotlib
+import random
 
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
-
-fig = plt.figure(figsize=[3, 3])
-ax = fig.add_subplot(111)
-canvas = agg.FigureCanvasAgg(fig)
 
 
 # Class Declarations
@@ -45,7 +42,30 @@ class Button():
 
         return False
 
+class DataPlot:
 
+    def __init__(self, label, color, y_scale, starting_data):
+        self.label = label
+        self.data = starting_data
+        self.color = color
+        fig = plt.figure(figsize=[3, 3])
+        self.ax = fig.add_subplot(111)
+
+        self.canvas = agg.FigureCanvasAgg(fig)
+
+    def draw_plot(self):
+        self.ax.plot(self.data[0],self.data[1], color= self.color)
+        self.canvas.draw()
+        renderer = self.canvas.get_renderer()
+
+        raw_data = renderer.tostring_rgb()
+        size = self.canvas.get_width_height()
+
+        return pygame.image.fromstring(raw_data, size, "RGB")
+
+    def add_data(self,data_input_tuple):
+        self.data[0].append(data_input_tuple[0])
+        self.data[1].append(data_input_tuple[1])
 # Our Draw function
 def redrawWindow():
     win.fill((255, 255, 255))
@@ -56,21 +76,10 @@ def redrawWindow():
         timeButton.text = "AirTime: {:.2f}".format(ourRocket.getAirTime())
         timeButton.draw(win)
 
-        tempChart = plot(data)
+        tempChart = temperature_chart.draw_plot()
         win.blit(tempChart, (50, 50))
 
-# Graph Function
 
-def plot(data):
-
-    ax.plot(data)
-    canvas.draw()
-    renderer = canvas.get_renderer()
-
-    raw_data = renderer.tostring_rgb()
-    size = canvas.get_width_height()
-
-    return pygame.image.fromstring(raw_data, size, "RGB")
 
 
 def quit_station():
@@ -79,7 +88,10 @@ def quit_station():
     pygame.quit()
     exit()
 
+
 def initialize():
+
+
     pygame.init()
     global ourRocket
     ourRocket = Rocket()
@@ -93,13 +105,16 @@ def initialize():
 
     global timeButton
     timeButton = Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
-    global data
-    data = [5, 6, 7, 3]
+
+    global temperature_chart
+    temperature_chart = DataPlot("temperature", 'red', 0 , [[1,2,3,4],[5, 6, 7, 3]])
+
 
 def main_loop():
     is_running = True
     is_mouse_over_button = False
     clock = pygame.time.Clock()
+    cur_x = len(temperature_chart.data[1]) + 1
     while is_running:
 
         redrawWindow()
@@ -119,6 +134,10 @@ def main_loop():
                     is_mouse_over_button = True
                 else:
                     is_mouse_over_button = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    temperature_chart.add_data((cur_x,random.randrange(0, 7)))
+                    cur_x += 1
         if ourRocket.is_ready():
             if is_mouse_over_button:
                 launchButton.color = (0, 100, 0)
