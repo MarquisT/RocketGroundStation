@@ -107,14 +107,13 @@ def initialize():
     timeButton = Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
 
     global temperature_chart
-    temperature_chart = DataPlot("temperature", 'red', 0 , [[1,2,3,4],[5, 6, 7, 3]])
+    temperature_chart = DataPlot("temperature", 'red', 0 , [[0],[0]])
 
 
 def main_loop():
     is_running = True
     is_mouse_over_button = False
     clock = pygame.time.Clock()
-    cur_x = len(temperature_chart.data[1]) + 1
     while is_running:
 
         redrawWindow()
@@ -136,8 +135,8 @@ def main_loop():
                     is_mouse_over_button = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    temperature_chart.add_data((cur_x,random.randrange(0, 7)))
-                    cur_x += 1
+                    temperature_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
+
         if ourRocket.is_ready():
             if is_mouse_over_button:
                 launchButton.color = (0, 100, 0)
