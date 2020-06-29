@@ -63,7 +63,7 @@ def redrawWindow():
 
 def plot(data):
 
-    ax.plot(data)
+    ax.plot(data, color='red')
     canvas.draw()
     renderer = canvas.get_renderer()
 
