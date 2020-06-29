@@ -1,10 +1,4 @@
-import numpy as np
-print("this is alex's code")
-print('I can run other programs from my program')
-print("hello World, from alex")
-print("testing")
-print("this is Merritt's code")
-exec(open("Merritt.py").read())
-print('this is Marks code')
-exec(open("Mark.py").read())
+import matplotlib.pyplot as plt
 
+plt.plot([1,2,3,4,5])
+plt.show()
