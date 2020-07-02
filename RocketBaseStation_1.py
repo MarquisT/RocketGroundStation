@@ -1,7 +1,9 @@
 import pygame
+
 from Rocket import Rocket
 import matplotlib
 import random
+import settings
 
 matplotlib.use("Agg")
 
@@ -44,7 +46,9 @@ class Button():
 
 class DataPlot:
 
-    def __init__(self, label, color, y_scale, starting_data):
+    def __init__(self, label, color, chart_pos, starting_data, ):
+        self.x = chart_pos[0]
+        self.y = chart_pos[1]
         self.label = label
         self.data = starting_data
         self.color = color
@@ -61,12 +65,19 @@ class DataPlot:
         raw_data = renderer.tostring_rgb()
         size = self.canvas.get_width_height()
 
-        return pygame.image.fromstring(raw_data, size, "RGB")
+
+        surface_to_return = pygame.Surface((size[0], size[1]))
+        surface_to_return.blit(pygame.image.fromstring(raw_data, size, "RGB"), (0,0))
+        font = pygame.font.SysFont('comicsans', 30)
+        surface_to_return.blit(font.render(self.label, True, (0,0,0)),(0,0))
+        return surface_to_return
 
     def add_data(self,data_input_tuple):
         self.data[0].append(data_input_tuple[0])
         self.data[1].append(data_input_tuple[1])
+
 # Our Draw function
+
 def redrawWindow():
     win.fill((255, 255, 255))
     if not ourRocket.is_launched():
@@ -76,10 +87,12 @@ def redrawWindow():
         timeButton.text = "AirTime: {:.2f}".format(ourRocket.getAirTime())
         timeButton.draw(win)
 
-        tempChart = temperature_chart.draw_plot()
-        win.blit(tempChart, (50, 50))
 
+        win.blit(temperature_chart.draw_plot(), (temperature_chart.x, temperature_chart.y))
 
+        win.blit(pressure_chart.draw_plot(), (pressure_chart.x, pressure_chart.y))
+
+        win.blit(acceleration_chart.draw_plot(), (acceleration_chart.x, acceleration_chart.y))
 
 
 def quit_station():
@@ -106,9 +119,12 @@ def initialize():
     global timeButton
     timeButton = Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
 
-    global temperature_chart
-    temperature_chart = DataPlot("temperature", 'red', 0 , [[0],[0]])
+    global temperature_chart, pressure_chart, acceleration_chart
+    temperature_chart = DataPlot("temperature", 'red', (50,50) , [[1],[1]])
 
+    pressure_chart = DataPlot("pressure", 'blue', (400,50), [[1], [1]])
+
+    acceleration_chart = DataPlot("acceleration", 'green', (400, 400), [[1], [1]])
 
 def main_loop():
     is_running = True
@@ -134,8 +150,14 @@ def main_loop():
                 else:
                     is_mouse_over_button = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    temperature_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
+                if ourRocket.is_launched():
+                    if event.key == pygame.K_RIGHT:
+                        temperature_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
+                    if event.key == pygame.K_LEFT:
+                        pressure_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
+                    if event.key == pygame.K_DOWN:
+                        acceleration_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
+
 
         if ourRocket.is_ready():
             if is_mouse_over_button:
@@ -153,6 +175,7 @@ def main_loop():
         clock.tick(60)
 
 
-initialize()
+if __name__ == '__main__' :
+    initialize()
 
-main_loop()
+    main_loop()
