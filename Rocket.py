@@ -36,6 +36,9 @@ class Rocket:
     def is_launched(self):
         return self._is_launched
 
+    def is_changed(self):
+        return False
+
     def launch(self):
         self._is_launched = True
         self.launchTime = time.time()
