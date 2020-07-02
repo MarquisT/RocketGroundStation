@@ -6,7 +6,7 @@ pygame.init()
 class Rocket:
 
     def __init__(self):
-        self._is_ready = False
+        self._is_ready = True
 
     def is_ready(self):
         return self._is_ready
