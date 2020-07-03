@@ -1,4 +1,5 @@
 import time
+import csv
 from Test_Communicator import Communicator
 
 class Rocket:
@@ -14,7 +15,11 @@ class Rocket:
 
         self._communicator = Communicator(self)
 
-
+    def saveData(self):
+        file = open('rocketData.csv', 'w', newline='')
+        writer = csv.writer(file)
+        writer.writerow(self.temps)
+        print("I need to save my data")
 
     def is_changed(self):
         self.load_new_data()

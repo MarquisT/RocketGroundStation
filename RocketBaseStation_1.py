@@ -96,6 +96,7 @@ def redrawWindow():
 def quit_station():
     global is_running
     is_running = False
+    ourRocket.saveData()
     pygame.quit()
     exit()
 
