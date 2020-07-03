@@ -46,11 +46,11 @@ class Button():
 
 class DataPlot:
 
-    def __init__(self, label, color, chart_pos, starting_data, ):
+    def __init__(self, label, color, chart_pos, data, ):
         self.x = chart_pos[0]
         self.y = chart_pos[1]
         self.label = label
-        self.data = starting_data
+        self.data = [[1], [1]]
         self.color = color
         fig = plt.figure(figsize=[3, 3])
         self.ax = fig.add_subplot(111)
@@ -58,7 +58,7 @@ class DataPlot:
         self.canvas = agg.FigureCanvasAgg(fig)
 
     def draw_plot(self):
-        self.ax.plot(self.data[0],self.data[1], color= self.color)
+        self.ax.plot(self.data[0], self.data[1], color= self.color)
         self.canvas.draw()
         renderer = self.canvas.get_renderer()
 
@@ -72,9 +72,7 @@ class DataPlot:
         surface_to_return.blit(font.render(self.label, True, (0,0,0)),(0,0))
         return surface_to_return
 
-    def add_data(self,data_input_tuple):
-        self.data[0].append(data_input_tuple[0])
-        self.data[1].append(data_input_tuple[1])
+
 
 # Our Draw function
 
@@ -149,15 +147,6 @@ def main_loop():
                     is_mouse_over_button = True
                 else:
                     is_mouse_over_button = False
-            if event.type == pygame.KEYDOWN:
-                if ourRocket.is_launched():
-                    if event.key == pygame.K_RIGHT:
-                        temperature_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
-                    if event.key == pygame.K_LEFT:
-                        pressure_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
-                    if event.key == pygame.K_DOWN:
-                        acceleration_chart.add_data((ourRocket.getAirTime(),random.randrange(0, 7)))
-
 
         if ourRocket.is_ready():
             if is_mouse_over_button:
@@ -170,7 +159,8 @@ def main_loop():
         if ourRocket.is_launched():
             if ourRocket.is_changed():
                 print(ourRocket.temps)
-
+                temperature_chart.data = (ourRocket.timestamps, ourRocket.temps)
+                pressure_chart.data = (ourRocket.timestamps, ourRocket.air_pressure)
         pygame.display.flip()
         clock.tick(60)
 
