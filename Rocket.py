@@ -14,6 +14,8 @@ class Rocket:
 
         self._communicator = Communicator(self)
 
+
+
     def is_changed(self):
         self.load_new_data()
 
@@ -21,6 +23,7 @@ class Rocket:
             self._is_changed = False    # Reset the Flag for next time.
             return True
         return False        # Return False if it wasn't true above.
+
     def load_new_data(self):
         self._communicator.refresh()
 
@@ -35,9 +38,6 @@ class Rocket:
 
     def is_launched(self):
         return self._is_launched
-
-    def is_changed(self):
-        return False
 
     def launch(self):
         self._is_launched = True
