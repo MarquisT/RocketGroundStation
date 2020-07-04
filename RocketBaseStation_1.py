@@ -159,7 +159,7 @@ def main_loop():
 
         if ourRocket.is_launched():
             if ourRocket.is_changed():
-                print(ourRocket.temps)
+               # print(ourRocket.temps)
                 temperature_chart.data = (ourRocket.timestamps, ourRocket.temps)
                 pressure_chart.data = (ourRocket.timestamps, ourRocket.air_pressure)
         pygame.display.flip()
