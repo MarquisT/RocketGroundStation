@@ -12,11 +12,36 @@ class Rocket:
         self.timestamps = []
         self.temps = []
         self.air_pressure = []
-        self.signalStrength = []
+        self.signal_strength = []
         self.launchTime = False
         self.messages = []
 
         self._communicator = Communicator(self)
+
+
+    def set_timestamp(self, timestamp):
+        self.timestamps.append(timestamp)
+
+    def set_temp(self, temp):
+        self.temps.append(temp)
+
+
+    def set_air_pressure(self, pressure):
+        self.air_pressure.append(pressure)
+
+    def set_signal_strength(self, signal):
+        self.signal_strength.append(signal)
+
+
+
+
+    def get_status(self):
+
+        status = {}
+        status["Temperature"] = self.temps[-1:]
+        status["Pressure"] = self.air_pressure[-1:]
+        return status
+
 
     def saveData(self):
         self._is_done = True

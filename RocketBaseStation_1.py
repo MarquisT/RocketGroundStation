@@ -10,8 +10,28 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
 
+pygame.font.init()
 
 # Class Declarations
+
+
+class StatusBox():
+    def __init__(self, text=''):
+        self.text = text
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+
+    def draw(self, win, status_list):
+        # Loop through each item
+        textsurface = self.myfont.render('Status', True, (0, 0, 0))
+        win.blit(textsurface, (50, 400))
+        count = 1
+        for key, value in status_list.items():
+            textsurface = self.myfont.render("{} : {} ".format(key, value), True, (0, 0, 0))
+            print(value)
+            win.blit(textsurface, (50, 400+ (count*20)))
+            count= count+1
+
 
 class Button():
     def __init__(self, color, x, y, width, height, text=''):
@@ -92,6 +112,8 @@ def redrawWindow():
 
         win.blit(acceleration_chart.draw_plot(), (acceleration_chart.x, acceleration_chart.y))
 
+        statusBox.draw(win, ourRocket.get_status())
+
 
 def quit_station():
     global is_running
@@ -124,6 +146,11 @@ def initialize():
     pressure_chart = DataPlot("pressure", 'blue', (400,50), [[1], [1]])
 
     acceleration_chart = DataPlot("acceleration", 'green', (400, 400), [[1], [1]])
+
+
+    global statusBox
+    statusBox = StatusBox()
+
 
 def main_loop():
     is_running = True
