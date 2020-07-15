@@ -29,4 +29,5 @@ class Communicator():
             self.rocket.set_temp(round(random.uniform(10, 30), 2))
             self.rocket.set_air_pressure(round(random.uniform(1000, 1100), 2))
             self.rocket.set_timestamp(self.rocket.getAirTime())
+            self.rocket.set_signal_strength(65)
             self.rocket._is_changed = True
