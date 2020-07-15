@@ -33,13 +33,12 @@ class Rocket:
         self.signal_strength.append(signal)
 
 
-
-
     def get_status(self):
 
         status = {}
         status["Temperature"] = self.temps[-1:]
         status["Pressure"] = self.air_pressure[-1:]
+        status["Signal"] = self.signal_strength[-1:]
         return status
 
 
