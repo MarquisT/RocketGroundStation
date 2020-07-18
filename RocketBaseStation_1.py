@@ -28,7 +28,7 @@ class StatusBox():
         count = 1
         for key, value in status_list.items():
             textsurface = self.myfont.render("{} : {} ".format(key, value), True, (0, 0, 0))
-            print(value)
+            print("The value {}".format(value))
             win.blit(textsurface, (50, 400+ (count*20)))
             count= count+1
 

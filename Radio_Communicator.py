@@ -16,11 +16,19 @@ class Communicator():
         thread = threading.Thread(target=self.read_from_port).start()
 
     def read_from_port(self):
-
+        print("reading from port")
         while not self.rocket._is_done:
 
-            reading = self.ser.readline().decode()
-            self.handleIncomingData(reading)
+            try:
+                reading = self.ser.readline().decode()
+                if reading:
+                    self.handleIncomingData(reading)
+
+            except serial.SerialException:  # catch error and ignore it
+                print('uh oh', )
+
+
+
 
         print("Shutting down Communicator")
         return
@@ -29,21 +37,24 @@ class Communicator():
         pass
 
     def handleIncomingData(self, data):
-        print(data)
+        if not data:
+            print("Emtpy data", data)
+            return
 
-        if "Ready - ACK send":
+        if "Ready - ACK sent" in data:
+            print("We received a ready signal", data)
             self.rocket.set_is_ready()
         if "Data:" in data:
-            #print("We need to process data", data)
+            print("We need to process data", data)
 
             data_array = re.findall(r'\[.*?\]', data)[2]  #
-
+            print(data_array)
 
             self.rocket.temps.append(float(re.findall(',T=(\d+)', data_array)[0])/100)
             self.rocket.air_pressure.append(float(re.findall(',P=(\d+)', data_array)[0])/100)
             self.rocket.timestamps.append(re.findall('ET=(\d+)', data_array)[0])
             #self.rocket.messages.append("Asdasdad")
-            self.rocket.signalStrength.append(re.findall(r':(-[0-9]+)', data)[0])
+            self.rocket.signal_strength.append(re.findall('RX_RSSI:(-\d+)', data)[0])
             self.rocket._is_changed = True
 
 
