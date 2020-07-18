@@ -70,6 +70,7 @@ class Rocket:
         self._is_ready = True
 
     def is_ready(self):
+
         return self._is_ready
 
     def is_launched(self):

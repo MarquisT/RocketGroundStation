@@ -4,6 +4,7 @@ class Communicator():
 
 
 
+
     def __init__(self, rocket):
 
         print("Test Communicator")
@@ -12,6 +13,9 @@ class Communicator():
 
     def sendLaunchCommand(self):
         pass
+
+
+
 
     def refresh(self):
 
