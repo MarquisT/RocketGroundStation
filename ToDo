@@ -4,9 +4,26 @@ When the launch button is clicked again it will ask you to confirm "Has the Rock
 - please make the plot log the data from the rocket temperature list
 - read through the communicator and see if you can figure out why we are using that
 - what about making a panel above the launch button that shows current state
-    - for example eventually it will says
-    Temp - 18.5 C
-    Air Pressure - 1012 mb
-    Calculated Alt - 200 meters
 
-- Once these are done, we will move on the altitude and pressure graphs.
+- the is_ready function needs to changed. We have a logical flaw. When we start the program if it recieves one weak signal saying its ready then it marks the rocket as ready even if it can no longer receive the signal.
+To fix this, the is_ready function should check the communicator is_ready function. The communication is ready function saves the time of the last ready signal recieved. If it's not within say 3 seconds, it should change the is ready flag to false. By keeping that time in the communicator class we can use a real and a random (test) time.
+
+- We need a function to calculate altitude. In order to calculate Altitude we need three things.
+- temperature( which the sensor can get), ambient air pressure (again the sensor gets this), and the actual sea level pressure of the air that day. Using these three things we can calculate altitude. Our sensor can get two of the three things.
+Then the formula for altitude is this:
+    altitude = 44330 * (1.0 - pow(pressure / sealevelPressure, 0.1903));
+
+The library on the rocket can calculate altitude (https://github.com/adafruit/Adafruit-BMP085-Library) or we can calculate it on the ground. But either way, we need to pass the function the correct sea level pressure.
+
+We get this from the weather station. Eg https://flightplanning.navcanada.ca/cgi-bin/Fore-obs/metar.cgi?NoSession=NS_Inconnu&format=raw&Langue=anglais&Region=can&Stations=CYSB
+
+If you look at the last time of the METAR  for Sudbury it says SLP123 which actually means 1012.3 mb of pressure which means 101230 pascals of air pressure.
+ METAR CYSB 182200Z 19009KT 170V260 15SM -SHRA SCT012 OVC040 20/19 A2989 RMK SC4CU4 SLP123 DENSITY ALT 2100FT=
+
+ We need to use this in our program to calculate the altitude. Or we could trasnmit that to the rocket in the launch function and then it can calculate it's own altitude and send that back. What do you prefer?
+
+ - we need to save all the rocket data (perhaps as one pickle file).
+ - on close, the save function should create a full size graph of each data set and export those image files so we can examine them closer after.
+ 
+
+
