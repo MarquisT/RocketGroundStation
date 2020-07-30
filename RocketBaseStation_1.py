@@ -2,7 +2,6 @@ import pygame
 
 from Rocket import Rocket
 import matplotlib
-import random
 import settings
 
 matplotlib.use("Agg")
@@ -123,12 +122,17 @@ def quit_station():
     exit()
 
 
+
+
 def initialize():
+
+    ap = input("What is the local air pressure today (should be between 950-1049):")
+    press = int(float(ap)*10)
 
 
     pygame.init()
     global ourRocket
-    ourRocket = Rocket()
+    ourRocket = Rocket(press)
     global win
     win = pygame.display.set_mode((1000, 700))
 

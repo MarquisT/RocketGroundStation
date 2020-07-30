@@ -24,6 +24,6 @@ If you look at the last time of the METAR  for Sudbury it says SLP123 which actu
 
  - we need to save all the rocket data (perhaps as one pickle file).
  - on close, the save function should create a full size graph of each data set and export those image files so we can examine them closer after.
- 
+
 
 
