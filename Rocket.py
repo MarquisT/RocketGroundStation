@@ -1,6 +1,7 @@
 import time
 #import csv
 import pickle
+import datetime
 
 from Test_Communicator import Communicator
 
@@ -19,6 +20,7 @@ class Rocket:
         self.messages = []
         self.sea_level_pressure = pressure
         self.altitude = []
+        self.launchDate = False
 
         self._communicator = Communicator(self)
 
@@ -55,10 +57,11 @@ class Rocket:
         #file = open('rocketData.csv', 'w', newline='')
         #writer = csv.writer(file)
         #writer.writerow(self.temps)
-        print("I need to save my data")
 
+       # print("I need to save my data suggested is {}".format(self.launchDate.today()))
+        #print(self.launchDate)
 
-        with open('flight_data.pickle', 'wb') as flight_data_file:
+        with open('flight_data_{}.pickle'.format(self.launchDate.today()), 'wb') as flight_data_file:
             pickle.dump(self, flight_data_file)
 
 
@@ -90,9 +93,17 @@ class Rocket:
         return "Null"
 
     def set_is_ready(self):
+        
         self._is_ready = True
 
     def is_ready(self):
+
+        #we need to check when the last is ready signal was recieved
+
+
+
+
+
 
         return self._is_ready
 
@@ -102,5 +113,6 @@ class Rocket:
     def launch(self):
         self._is_launched = True
         self.launchTime = time.time()
+        self.launchDate = datetime.datetime.now()
         self._communicator.sendLaunchCommand()
 
