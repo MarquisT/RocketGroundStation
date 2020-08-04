@@ -109,7 +109,7 @@ def redrawWindow():
 
         win.blit(pressure_chart.draw_plot(), (pressure_chart.x, pressure_chart.y))
 
-        win.blit(acceleration_chart.draw_plot(), (acceleration_chart.x, acceleration_chart.y))
+       # win.blit(altitude_chart.draw_plot(), (altitude_chart.x, altitude_chart.y))
 
         statusBox.draw(win, ourRocket.get_status())
 
@@ -127,7 +127,7 @@ def quit_station():
 def initialize():
 
     ap = input("What is the local air pressure today (should be between 950-1049):")
-    press = int(float(ap)*10)
+    press = int(float(ap)*100)
 
 
     pygame.init()
@@ -144,13 +144,14 @@ def initialize():
     global timeButton
     timeButton = Button((0, 255, 0), 50, 600, 300, 50, "Nothing yet")
 
-    global temperature_chart, pressure_chart, acceleration_chart
+    global temperature_chart, pressure_chart, altitude_chart #acceleration_chart,
     temperature_chart = DataPlot("temperature", 'red', (50,50) , [[1],[1]])
 
     pressure_chart = DataPlot("pressure", 'blue', (400,50), [[1], [1]])
 
-    acceleration_chart = DataPlot("acceleration", 'green', (400, 400), [[1], [1]])
+    #acceleration_chart = DataPlot("acceleration", 'green', (400, 400), [[1], [1]])
 
+    #altitude_chart = DataPlot("altitude", 'green', (400, 400), [[1]])
 
     global statusBox
     statusBox = StatusBox()
@@ -190,9 +191,11 @@ def main_loop():
 
         if ourRocket.is_launched():
             if ourRocket.is_changed():
+
                # print(ourRocket.temps)
                 temperature_chart.data = (ourRocket.timestamps, ourRocket.temps)
                 pressure_chart.data = (ourRocket.timestamps, ourRocket.air_pressure)
+                #altitude_chart.data = (ourRocket.altitude)
         pygame.display.flip()
         clock.tick(60)
 

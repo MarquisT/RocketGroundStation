@@ -9,10 +9,13 @@ class Communicator():
 
         print("Test Communicator")
         self.rocket = rocket
-        self.rocket.set_is_ready()
+        #self.rocket.set_is_ready()
 
     def sendLaunchCommand(self):
         pass
+
+    def check_if_last_ready_in_seconds(self, seconds):
+        return True
 
 
 

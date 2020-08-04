@@ -1,7 +1,7 @@
 import serial
 import threading
 import re
-
+import time
 
 class Communicator():
 
@@ -12,6 +12,7 @@ class Communicator():
         print("Real Communicator")
         self.ser = serial.Serial('/dev/cu.SLAB_USBtoUART', 115200, timeout=1)
         self.rocket = rocket
+        self.lastReadySignal = False
 
         thread = threading.Thread(target=self.read_from_port).start()
 
@@ -43,7 +44,8 @@ class Communicator():
 
         if "Ready - ACK sent" in data:
             print("We received a ready signal", data)
-            self.rocket.set_is_ready()
+            self.lastReadySignal = time.time()
+           # self.rocket.set_is_ready()
         if "Data:" in data:
             print("We need to process data", data)
 
@@ -64,4 +66,10 @@ class Communicator():
         # self.rocket.message.append(ser_bytes.decode('utf-8'))
 
 
+    def check_if_last_ready_in_seconds(self, seconds):
 
+        if self.lastReadySignal:
+            if time.time() > self.lastReadySignal + seconds:
+                return False
+            return True
+        return False

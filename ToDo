@@ -13,7 +13,12 @@ To fix this, the is_ready function should check the communicator is_ready functi
 Then the formula for altitude is this:
     altitude = 44330 * (1.0 - pow(pressure / sealevelPressure, 0.1903));
 
-The library on the rocket can calculate altitude (https://github.com/adafruit/Adafruit-BMP085-Library) or we can calculate it on the ground. But either way, we need to pass the function the correct sea level pressure.
+    (101215 / 101520)
+
+    power(0.9969956659)
+    44330 * c
+
+The library on the rocket can calculate altitude ((101) or we can calculate it on the ground. But either way, we need to pass the function the correct sea level pressure.
 
 We get this from the weather station. Eg https://flightplanning.navcanada.ca/cgi-bin/Fore-obs/metar.cgi?NoSession=NS_Inconnu&format=raw&Langue=anglais&Region=can&Stations=CYSB
 

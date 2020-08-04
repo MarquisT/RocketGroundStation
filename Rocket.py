@@ -11,7 +11,6 @@ class Rocket:
         self._is_changed = False
         self._is_launched = False
         self._is_done = False # This is for the real communcator to allow it gracefully kill the radio. Otherwise it hangs.
-        self._is_ready = False   # Change this to enable launch
         self.timestamps = []
         self.temps = []
         self.air_pressure = []
@@ -21,6 +20,7 @@ class Rocket:
         self.sea_level_pressure = pressure
         self.altitude = []
         self.launchDate = False
+        self.ground_station_elevation = False
 
         self._communicator = Communicator(self)
 
@@ -46,23 +46,20 @@ class Rocket:
         status = {}
         status["Temperature"] = self.temps[-1:]
         status["Pressure"] = self.air_pressure[-1:]
-        status["Altitude"] = self.altitude[-1:]
+        status["ASL"] = self.altitude[-1:]
         status["Signal"] = self.signal_strength[-1:]
+        status["Height"] = self.calculate_height()
 
         return status
 
 
     def saveData(self):
+
         self._is_done = True
-        #file = open('rocketData.csv', 'w', newline='')
-        #writer = csv.writer(file)
-        #writer.writerow(self.temps)
 
-       # print("I need to save my data suggested is {}".format(self.launchDate.today()))
-        #print(self.launchDate)
-
-        with open('flight_data_{}.pickle'.format(self.launchDate.today()), 'wb') as flight_data_file:
-            pickle.dump(self, flight_data_file)
+        if self.launchDate:
+            with open('flight_data_{}.pickle'.format(self.launchDate.today()), 'wb') as flight_data_file:
+                pickle.dump(self, flight_data_file)
 
 
 
@@ -83,8 +80,23 @@ class Rocket:
 
     def calculate_altitude(self):
         print("we have {} and {} ".format(self.air_pressure[-1:][0], self.sea_level_pressure))
-        altitude = 44330 * (1.0 - pow(self.air_pressure[-1:][0] / self.sea_level_pressure, 0.1903));
-        return altitude
+        altitude = 44330 * (1.0 - pow(((self.air_pressure[-1:][0]*100) / self.sea_level_pressure), 0.1903));
+        return round(altitude, 1)
+
+    def calculate_height(self):
+        if self.ground_station_elevation == False:
+            if(len(self.altitude)<1):
+                return 0
+
+            else:
+                print("First is", self.altitude)
+                print("Second is", self.altitude[0])
+
+                self.ground_station_elevation = self.altitude[0]
+        if len(self.altitude)<2:
+            return 0
+
+        return round(self.altitude[-1:][0] - self.ground_station_elevation, 1)
 
 
     def getAirTime(self):
@@ -92,12 +104,12 @@ class Rocket:
             return time.time() - self.launchTime
         return "Null"
 
-    def set_is_ready(self):
-        
-        self._is_ready = True
+    #def set_is_ready(self):
+
+   #    self._is_ready = True
 
     def is_ready(self):
-
+        return self._communicator.check_if_last_ready_in_seconds(2)
         #we need to check when the last is ready signal was recieved
 
 
@@ -105,7 +117,7 @@ class Rocket:
 
 
 
-        return self._is_ready
+        #return self._is_ready
 
     def is_launched(self):
         return self._is_launched
